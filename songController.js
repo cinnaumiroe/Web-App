@@ -1,7 +1,7 @@
-import sqlite3 from "sqlite3";
+var sqlite3 = require("sqlite3");
 const db = new sqlite3.Database("./musiList.db");
 
-export function getSongs(search = {}) {
+function getSongs(search = {}) {
   const filterFields = [];
   const filterValues = [];
 
@@ -47,7 +47,7 @@ export function getSongs(search = {}) {
   });
 }
 
-export function getSongById(id) {
+function getSongById(id) {
   return new Promise((resolve, reject) => {
     db.get(
       `SELECT id, title, artist, genre, reason FROM songs WHERE id = ${id}`,
@@ -62,7 +62,7 @@ export function getSongById(id) {
   });
 }
 
-export function addSong({ title, artist, genre, reason }) {
+function addSong({ title, artist, genre, reason }) {
   const query = `INSERT INTO songs (title, artist, genre, reason) VALUES (?, ?, ?, ?)`;
 
   return new Promise((resolve, reject) => {
@@ -76,7 +76,7 @@ export function addSong({ title, artist, genre, reason }) {
   });
 }
 
-export function updateSong(id, { title, artist, genre, reason }) {
+function updateSong(id, { title, artist, genre, reason }) {
   const query = `UPDATE songs SET title = ?, artist = ?, genre = ?, reason = ? WHERE id = ?`;
   return new Promise((resolve, reject) => {
     db.run(query, [title, artist, genre, reason, id], function (err) {
@@ -89,7 +89,7 @@ export function updateSong(id, { title, artist, genre, reason }) {
   });
 }
 
-export function patchSong(id, updates) {
+function patchSong(id, updates) {
   const fields = [];
   const values = [];
 
@@ -110,7 +110,7 @@ export function patchSong(id, updates) {
   });
 }
 
-export function deleteSongById(id) {
+function deleteSongById(id) {
   const query = `DELETE FROM songs WHERE id = ?`;
   return new Promise((resolve, reject) => {
     db.run(query, [id], function (err) {
@@ -122,3 +122,12 @@ export function deleteSongById(id) {
     });
   });
 }
+
+module.exports = {
+  getSongs,
+  getSongById,
+  addSong,
+  updateSong,
+  patchSong,
+  deleteSongById,
+};
